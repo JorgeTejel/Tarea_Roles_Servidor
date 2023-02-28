@@ -7,6 +7,6 @@
     </x-layout.menu>
 @endsection
 @section("contenido")
-    <tabla consulta="idiomas" filas_serializadas='@json($filas)' campos_serializados='@json($campos)' nombre_tabla="Empleados">
+    <tabla rol="{{$rol}}" consulta="idiomas" filas_serializadas='@json($filas)' campos_serializados='@json($campos)' nombre_tabla="Empleados">
     </tabla>
 @endsection

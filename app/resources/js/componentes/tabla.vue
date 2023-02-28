@@ -28,13 +28,13 @@
                  px-4 p-2 text-xl text-gray-500  divide-green-600 " v-for="valor in fila">
                     {{ valor }}
                 </td>
-                <td @click="editar(fila.id)" class="text-center self-center cursor-pointer pt-6 h-10v w-5v  fa fa-pencil"
+                <td v-if="rol=='administrador'" @click="editar(fila.id)" class="text-center self-center cursor-pointer pt-6 h-10v w-5v  fa fa-pencil"
                              aria-hidden="true">
                 </td>
-                <td @click="borrar(fila.id)" class="text-center self-center cursor-pointer pt-6  h-10v w-5v fas fa-trash-alt"
+                <td v-if="rol=='administrador'" @click="borrar(fila.id)" class="text-center self-center cursor-pointer pt-6  h-10v w-5v fas fa-trash-alt"
                     aria-hidden="true">
                 </td>
-                <td @click="consultar(fila.id, nombre_tabla)" aria-hidden="true" class="cursor-pointer">
+                <td @click="consultar(fila.id)" aria-hidden="true" class="cursor-pointer">
                     {{ consulta }}
                 </td>
             </tr>
@@ -48,7 +48,7 @@ import axios from 'axios';
 
 export default {
     name: "tabla",
-    props: ['filas_serializadas', 'campos_serializados', 'nombre_tabla', 'consulta'],
+    props: ['filas_serializadas', 'campos_serializados', 'nombre_tabla', 'consulta', 'rol'],
     data() {
         return {
             filas: [],
@@ -117,8 +117,9 @@ export default {
             );
             // console.log("filas "+this.filas);
         },
-        consultar(id, tabla) {
-            var url ="http://localhost:8000/"+this.consulta/id;
+        consultar(id) {
+            var url = window.location.href; // ruta actual en la que estoy
+            url = url + "/" + this.consulta + "/" + id; // ejemplo -> empleados/idiomas/1
             window.location.href = url;
 
         }

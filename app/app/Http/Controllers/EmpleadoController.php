@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Empleado;
+use App\Models\Idioma;
 use Illuminate\Http\Request;
+use App\Http\Controllers\IdiomaController;
 
 class EmpleadoController extends Controller
 {
@@ -20,7 +22,9 @@ class EmpleadoController extends Controller
         unset ($campos['created_at']);
         unset ($campos['updated_at']);
         $campos = array_keys($campos);
-        return view("empresa.empleado.listado", ['filas' => $empleados, 'campos' => $campos]);
+        $rol = auth()->user()->getRoleNames()[0]; // Conseguir el rol del usuario que se ha logueado y está viendo el listado de empleados
+        // dd($rol);
+        return view("empresa.empleado.listado", ['filas' => $empleados, 'campos' => $campos, 'rol'=>$rol]);
 
 //        // Para ver las filas en páginas (no todos a la vez)
 //        $empleados = Empleado::paginate(10);
@@ -104,5 +108,22 @@ class EmpleadoController extends Controller
 
         $empleados = Empleado::All();
         return (response()->json($empleados));
+    }
+
+    public function get_idiomas(int $id) {
+        // Encontrar el id del empleado
+        $empleado = Empleado::where("id", $id)->first();
+        // dd($empleado);
+
+        // Capturar los idiomas donde empleado_id es el id del empleado que recibe la función
+        $idiomas = Idioma::where('empleado_id', $empleado->id)->get();
+        // dd($idiomas);
+
+        $campos = $idiomas[0]->getAttributes();
+        unset ($campos['created_at']);
+        unset ($campos['updated_at']);
+        $campos = array_keys($campos);
+
+        return view("empresa.empleado.idiomas_empleado", ['empleado'=>$empleado, 'filas'=>$idiomas, 'campos'=>$campos]);
     }
 }
